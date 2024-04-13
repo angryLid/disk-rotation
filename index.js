@@ -11,12 +11,26 @@ const _dataSourse = [
     "Vue",
 ]
 
+Array.prototype.shuffle = function() {
+    var input = this;
+
+    for (var i = input.length-1; i >=0; i--) {
+
+        var randomIndex = Math.floor(Math.random()*(i+1));
+        var itemAtIndex = input[randomIndex];
+
+        input[randomIndex] = input[i];
+        input[i] = itemAtIndex;
+    }
+    return input;
+}
 const range = n => Array(n).fill(null).map((_, idx) => idx)
 
 const dataSource = []
 for(const _ in range(20)){
     dataSource.splice(0, 0, ..._dataSourse)
 }
+dataSource.shuffle()
 
 const disk = document.querySelector(".disk")
 disk.addEventListener("mouseover", function(event) {
