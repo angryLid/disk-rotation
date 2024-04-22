@@ -36,21 +36,17 @@ for (const word of dataSource) {
 
     accumulatedWidth += offsetWidth * 0.5
     const transform = `translate(-50%, -50%) rotate(${deg}deg) translate(${accumulatedWidth}px)`
-    // const transform = `rotate(${deg}deg) translate(${accumulatedWidth}px)`
-    // span.style.transformOrigin = "top left"
 
     span.style.transform = transform
     span.style.position = "absolute"
-    // span.style.transition = "all 0.3s ease 0s"
+
     requestIdleCallback(() => {
         span.style.transition = "all 0.3s ease 0s"
 
     })
     span.style.height = '16px'
     span.style.lineHeight = '16px'
-    // span.style.width = `${offsetWidth * 2}px`
-    // span.style.display = "flex"
-    // span.style.justifyContent = "center"
+
     span.classList.add("highlight")
     span.dataset.deg = deg
 
@@ -79,7 +75,7 @@ for (const word of dataSource) {
 
             const element = event.target
             const tagDeg = element.dataset.deg
-            // tagDeg + deg + x = 0
+
             deg = - tagDeg
         }
     })
