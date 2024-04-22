@@ -29,8 +29,14 @@ const disk = document.querySelector(".disk")
 }()
 
 !function insertTexts() {
+    const INNER_RADIUS = 400
+    const OUTER_RADIUS = 800
+    const DELTA_DEG = 6
+    const TEXT_GAP = 20
+
     let deg = 0
-    let accumulatedWidth = 400
+    let translationWidth = 400
+
     for (const word of dataSource) {
         const span = document.createElement("span")
         span.innerText = word
@@ -40,21 +46,21 @@ const disk = document.querySelector(".disk")
         span.classList.add("text")
         span.dataset.deg = deg
 
-        accumulatedWidth += offsetWidth * 0.5
+        translationWidth += offsetWidth * 0.5
 
         span.style.transform =
-            `translate(-50%, -50%) rotate(${deg}deg) translate(${accumulatedWidth}px)`
+            `translate(-50%, -50%) rotate(${deg}deg) translate(${translationWidth}px)`
 
         requestIdleCallback(() => {
             span.style.transition = "all 0.3s ease 0s"
         })
 
-        accumulatedWidth += 20
-        accumulatedWidth += offsetWidth * 0.5
+        translationWidth += TEXT_GAP
+        translationWidth += offsetWidth * 0.5
 
-        if (accumulatedWidth > 800) {
-            deg += 6
-            accumulatedWidth = 400
+        if (translationWidth > OUTER_RADIUS) {
+            deg += DELTA_DEG
+            translationWidth = INNER_RADIUS
         }
     }
 }()
