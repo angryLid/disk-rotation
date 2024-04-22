@@ -1,63 +1,34 @@
-const _dataSourse = [
-    "Python",
-    "JavaScript",
-    "Go",
-    "Electron",
-    "Elasticsearch",
-    "Ruby on Rails",
-    "Next.JS, TailwindCSS and Vercel",
-    "Rust",
-    "Swift",
-    "Vue",
-]
+import { createDataSource } from "./datasource";
 
-Array.prototype.shuffle = function() {
-    var input = this;
-
-    for (var i = input.length-1; i >=0; i--) {
-
-        var randomIndex = Math.floor(Math.random()*(i+1));
-        var itemAtIndex = input[randomIndex];
-
-        input[randomIndex] = input[i];
-        input[i] = itemAtIndex;
-    }
-    return input;
-}
-const range = n => Array(n).fill(null).map((_, idx) => idx)
-
-const dataSource = []
-for(const _ in range(20)){
-    dataSource.splice(0, 0, ..._dataSourse)
-}
-dataSource.shuffle()
+const dataSource = createDataSource()
 
 const disk = document.querySelector(".disk")
-disk.addEventListener("mouseover", function(event) {
-// return
-    const classes = Array.from(event.target.classList)
-    if(classes.includes("highlight")){
 
-        const element = event.target
-        element.style.transform += "scale(2)"
-        
-        
+const eventActions = [
+    { 
+        event: "mouseover", 
+        action: ele => ele.style.transform += "scale(2)" 
+    },
+    { 
+        event: "mouseout", 
+        action: ele => ele.style.transform = ele.style.transform.replace("scale(2)", "") 
     }
-})
+]
 
-disk.addEventListener("mouseout", function(event) {
+eventActions.forEach(({ event, action }) => {
+    disk.addEventListener(event, function (event) {
+        const classes = Array.from(event.target.classList)
+        if (classes.includes("highlight")) {
+            const element = event.target
+            action(element)
+        }
+    })
+});
 
-    const classes = Array.from(event.target.classList)
-    if(classes.includes("highlight")){
 
-        const element = event.target
-        element.style.transform = element.style.transform.replace("scale(2)", "")
-        
-    }
-})
 let deg = 0
 let accumulatedWidth = 400
-for(const word of dataSource){
+for (const word of dataSource) {
     const span = document.createElement("span")
     span.innerText = word
     disk.insertAdjacentElement("beforeend", span)
@@ -82,30 +53,30 @@ for(const word of dataSource){
     // span.style.justifyContent = "center"
     span.classList.add("highlight")
     span.dataset.deg = deg
- 
+
     accumulatedWidth += 20
     accumulatedWidth += offsetWidth * 0.5
 
-    if(accumulatedWidth > 800){
+    if (accumulatedWidth > 800) {
         deg += 6
         accumulatedWidth = 400
-    } 
+    }
 }
 
 
-(function (){
+(function () {
 
     let deg = -30
     disk.style.transition = "all 0.2s"
     setInterval(() => {
         disk.style.transform = `rotate(${deg}deg)`
         deg -= 0.02
-    }, 1000/60);
-    disk.addEventListener("click", function(event) {
+    }, 1000 / 60);
+    disk.addEventListener("click", function (event) {
 
         const classes = Array.from(event.target.classList)
-        if(classes.includes("highlight")){
-    
+        if (classes.includes("highlight")) {
+
             const element = event.target
             const tagDeg = element.dataset.deg
             // tagDeg + deg + x = 0
