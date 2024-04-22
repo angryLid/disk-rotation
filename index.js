@@ -4,63 +4,62 @@ const dataSource = createDataSource()
 
 const disk = document.querySelector(".disk")
 
-const eventActions = [
-    { 
-        event: "mouseover", 
-        action: ele => ele.style.transform += "scale(2)" 
-    },
-    { 
-        event: "mouseout", 
-        action: ele => ele.style.transform = ele.style.transform.replace("scale(2)", "") 
-    }
-]
 
-eventActions.forEach(({ event, action }) => {
-    disk.addEventListener(event, function (event) {
-        const classes = Array.from(event.target.classList)
-        if (classes.includes("highlight")) {
-            const element = event.target
-            action(element)
+!function applyHoverEffect() {
+    const eventActions = [
+        {
+            event: "mouseover",
+            action: ele => ele.style.transform += "scale(2)"
+        },
+        {
+            event: "mouseout",
+            action: ele => ele.style.transform = ele.style.transform.replace("scale(2)", "")
         }
-    })
-});
+    ]
 
+    eventActions.forEach(({ event, action }) => {
+        disk.addEventListener(event, function (event) {
+            const classes = Array.from(event.target.classList)
+            if (classes.includes("text")) {
+                const element = event.target
+                action(element)
+            }
+        })
+    });
+}()
 
-let deg = 0
-let accumulatedWidth = 400
-for (const word of dataSource) {
-    const span = document.createElement("span")
-    span.innerText = word
-    disk.insertAdjacentElement("beforeend", span)
-    const { offsetWidth } = span
+!function insertTexts() {
+    let deg = 0
+    let accumulatedWidth = 400
+    for (const word of dataSource) {
+        const span = document.createElement("span")
+        span.innerText = word
+        disk.insertAdjacentElement("beforeend", span)
+        const { offsetWidth } = span
 
-    accumulatedWidth += offsetWidth * 0.5
-    const transform = `translate(-50%, -50%) rotate(${deg}deg) translate(${accumulatedWidth}px)`
+        span.classList.add("text")
+        span.dataset.deg = deg
 
-    span.style.transform = transform
-    span.style.position = "absolute"
+        accumulatedWidth += offsetWidth * 0.5
 
-    requestIdleCallback(() => {
-        span.style.transition = "all 0.3s ease 0s"
+        span.style.transform =
+            `translate(-50%, -50%) rotate(${deg}deg) translate(${accumulatedWidth}px)`
 
-    })
-    span.style.height = '16px'
-    span.style.lineHeight = '16px'
+        requestIdleCallback(() => {
+            span.style.transition = "all 0.3s ease 0s"
+        })
 
-    span.classList.add("highlight")
-    span.dataset.deg = deg
+        accumulatedWidth += 20
+        accumulatedWidth += offsetWidth * 0.5
 
-    accumulatedWidth += 20
-    accumulatedWidth += offsetWidth * 0.5
-
-    if (accumulatedWidth > 800) {
-        deg += 6
-        accumulatedWidth = 400
+        if (accumulatedWidth > 800) {
+            deg += 6
+            accumulatedWidth = 400
+        }
     }
-}
+}()
 
-
-(function () {
+!function rotate() {
 
     let deg = -30
     disk.style.transition = "all 0.2s"
@@ -71,7 +70,7 @@ for (const word of dataSource) {
     disk.addEventListener("click", function (event) {
 
         const classes = Array.from(event.target.classList)
-        if (classes.includes("highlight")) {
+        if (classes.includes("text")) {
 
             const element = event.target
             const tagDeg = element.dataset.deg
@@ -79,5 +78,6 @@ for (const word of dataSource) {
             deg = - tagDeg
         }
     })
-})()
+}()
+
 
