@@ -4,29 +4,19 @@ const dataSource = createDataSource()
 
 const disk = document.querySelector(".disk")
 
-
-!function applyHoverEffect() {
-    const eventActions = [
-        {
-            event: "mouseover",
-            action: ele => ele.style.transform += "scale(2)"
-        },
-        {
-            event: "mouseout",
-            action: ele => ele.style.transform = ele.style.transform.replace("scale(2)", "")
+function createHandler(callback) {
+    return function (event) {
+        const classes = Array.from(event.target.classList)
+        if (classes.includes("text")) {
+            const element = event.target
+            callback(element)
         }
-    ]
+    }
+}
 
-    eventActions.forEach(({ event, action }) => {
-        disk.addEventListener(event, function (event) {
-            const classes = Array.from(event.target.classList)
-            if (classes.includes("text")) {
-                const element = event.target
-                action(element)
-            }
-        })
-    });
-}()
+disk.addEventListener("mouseover", createHandler(ele => ele.style.transform += "scale(2)"))
+disk.addEventListener("mouseout", createHandler(ele => ele.style.transform = ele.style.transform.replace("scale(2)", "")))
+
 
 !function insertTexts() {
     const INNER_RADIUS = 400
@@ -73,17 +63,8 @@ const disk = document.querySelector(".disk")
         disk.style.transform = `rotate(${deg}deg)`
         deg -= 0.02
     }, 1000 / 60);
-    disk.addEventListener("click", function (event) {
 
-        const classes = Array.from(event.target.classList)
-        if (classes.includes("text")) {
-
-            const element = event.target
-            const tagDeg = element.dataset.deg
-
-            deg = - tagDeg
-        }
-    })
+    disk.addEventListener("click", createHandler (ele => deg = -ele.dataset.deg))
 }()
 
 
