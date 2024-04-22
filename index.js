@@ -38,9 +38,12 @@ disk.addEventListener("mouseout", createHandler(ele => ele.style.transform = ele
 
         translationWidth += offsetWidth * 0.5
 
-        span.style.transform =
-            `translate(-50%, -50%) rotate(${deg}deg) translate(${translationWidth}px)`
-
+        span.style.transform = [
+            "translate(-50%, -50%)",
+            `rotate(${deg}deg)`,
+            `translate(${translationWidth}px)`,
+        ].join(" ")
+        
         requestIdleCallback(() => {
             span.style.transition = "all 0.3s ease 0s"
         })
